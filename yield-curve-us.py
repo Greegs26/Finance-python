@@ -2,6 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from fredapi import Fred
 
+import streamlit as st
+import plotly.graph_objects as go
+
+# Streamlit app title
+st.title("US Treasury Yield Curve Dashboard")
+
 # Replace 'your_api_key_here' with your actual FRED API key
 fred = Fred(api_key='487010e23fc840edb4d9e0af14cabdea')
 
@@ -37,12 +43,43 @@ latest_data = {k: v for k, v in latest_data.items() if v is not None}
 # Prepare data for plotting
 maturities = list(latest_data.keys())
 yields = list(latest_data.values())
+yield_df = pd.DataFrame({"Maturity": maturities, "Yield (%)": yields})
 
-# Plot the yield curve
-plt.figure(figsize=(10, 6))
-plt.plot(maturities, yields, marker='o')
-plt.title('US Treasury Yield Curve')
-plt.xlabel('Maturity')
-plt.ylabel('Yield (%)')
-plt.grid(True)
-plt.show()
+# Display table
+st.subheader("Latest Treasury Yields")
+st.dataframe(yield_df)
+
+# Plot using Plotly
+fig = go.Figure()
+fig.add_trace(go.Scatter(
+    x=maturities,
+    y=yields,
+    mode='lines+markers',
+    name='Yield Curve'
+))
+fig.update_layout(
+    title="US Treasury Yield Curve",
+    xaxis_title="Maturity",
+    yaxis_title="Yield (%)",
+    template="plotly_white"
+)
+st.plotly_chart(fig)
+
+## Create a DataFrame to display the maturities and yields
+#yield_df = pd.DataFrame({
+    #'Maturity': maturities,
+    #'Yield (%)': yields
+#})
+
+## Print the DataFrame as a table
+#print("US Treasury Yields")
+#print(yield_df)
+
+## Plot the yield curve
+#plt.figure(figsize=(10, 6))
+#plt.plot(maturities, yields, marker='o')
+#plt.title('US Treasury Yield Curve')
+#plt.xlabel('Maturity')
+#plt.ylabel('Yield (%)')
+#plt.grid(True)
+#plt.show()
