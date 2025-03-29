@@ -5,11 +5,17 @@ from fredapi import Fred
 import streamlit as st
 import plotly.graph_objects as go
 
+from dotenv import load_dotenv
+import os
+
+# Use this to fetch API key
+load_dotenv()
+FRED_API_KEY=os.getenv("FRED_API_KEY")
+fred = Fred(api_key=FRED_API_KEY)
+
 # Streamlit app title
 st.title("US Treasury Yield Curve Dashboard")
 
-# Replace 'your_api_key_here' with your actual FRED API key
-fred = Fred(api_key='487010e23fc840edb4d9e0af14cabdea')
 
 # Retrieve US Treasury yield curve data from FRED
 # These are the series IDs for different maturities
