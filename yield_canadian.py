@@ -38,3 +38,13 @@ def get_canadian_yields():
         if date and value:
             yields[label] = value
     return yields
+
+# If the script is run directly, print a table
+if __name__ == "__main__":
+    yields = {}
+    for label, series_id in series_ids.items():
+        date, value = get_latest_yield(series_id)
+        if date and value:
+            yields[label] = {"Date": date, "Yield (%)": value}
+    df = pd.DataFrame.from_dict(yields, orient="index")
+    print(df)
